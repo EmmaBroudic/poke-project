@@ -1,26 +1,57 @@
-import './style.css'
-import typescriptLogo from './typescript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.ts'
+//import './style.css'
 
-
+import { getAPIContent } from './api/getAPIcontent.ts'
+//import { getPokemonById } from './api/getPokemonById.ts'
+import { getPokemonsBySpecificColor } from './api/getPokemonsByFilters.ts'
+//import { getPokemonsByColor } from './api/getPokemonsByFilters'
+import { router } from './routes.ts'
+/*
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://www.typescriptlang.org/" target="_blank">
-      <img src="${typescriptLogo}" class="logo vanilla" alt="TypeScript logo" />
-    </a>
-    <h1>Vite + TypeScript</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
+
+    <h1>Test filtres couleurs</h1>
+
+    <div id="body-bloc">
+
+      <div id="filters-bloc">
+
+        <div class="filter">
+          <p id="color"></p>
+        </div>
+
+        <div class="filter">
+          <p>filter 2</p>
+        </div>
+
+        <div class="filter">
+          <p>filter 3</p>
+        </div>
+
+      </div>
+
+      <div id="poke-bloc">
+        <p class="pokemonBloc"></p>
+      </div>
+
     </div>
-    <p class="read-the-docs">
-      Click on the Vite and TypeScript logos to learn more
-    </p>
+
   </div>
 `
+*/
+getAPIContent();
+//console.log(getPokemonById(1));
+console.log(getPokemonsBySpecificColor(1));
+//getAllPokemons();
+//getPokemonsByColor(document.querySelector<HTMLButtonElement>('#color')!)
+router();
+/*
+// Sélectionne l'élément avec la classe 'filter'
+const filterElement = document.querySelector<HTMLButtonElement>('h1');
 
-setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
-
+// Vérifie si l'élément existe avant de lui assigner du contenu
+if (filterElement) {
+  // Utilise innerHTML pour ajouter du contenu à cet élément
+  filterElement.innerHTML = "Nouveau contenu pour le filtre";
+} else {
+  console.error("L'élément avec la classe 'filter' n'a pas été trouvé.");
+}*/

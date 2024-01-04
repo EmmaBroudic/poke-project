@@ -1,44 +1,35 @@
 import { fetchData } from './utils';
 
-export async function getPokemonsByColor(element: HTMLButtonElement) {
+export async function getColors(): Promise<[]> {
+
     const url = "https://pokeapi.co/api/v2/pokemon-color/";
     const apiData = await fetchData(url);
 
     const colors = apiData.results.map((color: { name: string }) => color.name);
 
-    const formElement = document.createElement('form');
-
-    const filterColorTitle = document.createElement('h2');
-    filterColorTitle.innerHTML = "Couleur";
-    element.appendChild(filterColorTitle);
+    let colorsArray: string[] = [];
 
     colors.forEach((color: string) => {
-        const container = document.createElement('div');
-        container.style.display = 'flex';
-
-        const checkboxContainer = document.createElement('div');
-        checkboxContainer.style.marginRight = '10px';
-
-        const label = document.createElement('label');
-
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.name = 'colors';
-        checkbox.value = color;
-
-        label.appendChild(checkbox);
-        checkboxContainer.appendChild(label);
-
-        const colorInfo = document.createElement('div');
-        colorInfo.textContent = color;
-
-        container.appendChild(checkboxContainer);
-        container.appendChild(colorInfo);
-
-        formElement.appendChild(container);
-    });
-
-    element.appendChild(formElement);
-
+        colorsArray.push(color);
+    })
+    
     console.log(apiData);
+    console.log(colorsArray);
+
+    return colors;
+}
+
+export async function getPokemonsBySpecificColor(id: number): Promise<string[]> {
+    const url = `https://pokeapi.co/api/v2/pokemon-color/${id}`;
+    const apiData = await fetchData(url);
+
+    const pokemonsColor= apiData.results.map((pokemonColor: { name: string }) => pokemonColor.name);
+
+    let pokemonsColorArray: string[] = [];
+
+    pokemonsColor.forEach((pokemonColor: string) => {
+        pokemonsColorArray.push(pokemonColor);
+    })
+
+    return pokemonsColorArray;
 }

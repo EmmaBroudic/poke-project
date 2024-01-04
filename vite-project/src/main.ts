@@ -2,6 +2,7 @@
 
 import { getAPIContent } from './api/getAPIcontent.ts'
 import { getPokemonById } from './api/getPokemonById.ts'
+import { getPokemonsBySpecificColor } from './api/getPokemonsByFilters.ts'
 //import { getPokemonsByColor } from './api/getPokemonsByFilters'
 import { router } from './routes.ts'
 /*
@@ -39,6 +40,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 */
 getAPIContent();
 console.log(getPokemonById(1));
+console.log(getPokemonsBySpecificColor(1));
 //getAllPokemons()
 //getPokemonsByColor(document.querySelector<HTMLButtonElement>('#color')!)
 router();

@@ -2,7 +2,8 @@ import './home.css';
 
 import { getAPIContent } from '../api/getAPIcontent.ts';
 import { getAllPokemons } from '../api/getAllPokemons.ts';
-import { getPokemonsByColor } from '../api/getPokemonsByFilters';
+//import { getPokemonsByColor } from '../api/getPokemonsByFilters';
+import { displayColorsFilters } from '../components/displayColorsFilter.ts'
 
 export function homeContent(): string {
   const content = `
@@ -32,7 +33,7 @@ export function homeContent(): string {
     const colorElement = document.querySelector<HTMLButtonElement>('#color');
     if (colorElement) {
       // Une fois que l'élément est présent dans le DOM, appelez getPokemonsByColor
-      getPokemonsByColor(colorElement);
+      displayColorsFilters(colorElement);
     } else {
       console.error("L'élément avec l'ID 'color' n'a pas été trouvé.");
     }

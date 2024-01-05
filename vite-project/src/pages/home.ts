@@ -1,46 +1,67 @@
 import './home.css';
+import { getAllPokemons } from '../api/getAllPokemons';
+import { displayPage } from '../components/displayPage';
+import { displayColorsFilter } from '../components/displayColorsFilter';
+import {displayShapesFilter}from '../components/displayShapesFilter';
+import { createPagination } from '../components/Pagination';
 
-import { getAPIContent } from '../api/getAPIcontent.ts';
-import { getAllPokemons } from '../api/getAllPokemons.ts';
-//import { getPokemonsByColor } from '../api/getPokemonsByFilters';
-import { displayColorsFilters } from '../components/displayColorsFilter.ts'
-
-export function homeContent(): string {
+export function home() {
   const content = `
-    <div>
-      <h1>Test filtres couleurs</h1>
+    <div id="app">
+      <h1>POKEDEX</h1>
       <div id="body-bloc">
-        <div id="filters-bloc">
-          <div class="filter">
-            <p id="color"></p>
+        <div id="filters">
+          <div id="filters-bloc">
+            <button id="color">Filtrer par couleur</button>
           </div>
-          <div class="filter">
-            <p>filter 2</p>
-          </div>
-          <div class="filter">
-            <p>filter 3</p>
+          <div id="filters-bloc">
+            <button id="shape">Filtrer par forme</button>
           </div>
         </div>
         <div id="poke-bloc">
-          <p class="pokemonBloc"></p>
+          <div id="pagination-bloc"></div>
+          <div class="pokemonBloc"></div>
+          <div class="pokemonBlocDeux"></div>
         </div>
       </div>
     </div>
   `;
 
-  // Attente du chargement du DOM
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded', async () => {
     const colorElement = document.querySelector<HTMLButtonElement>('#color');
+    const shapeElement = document.querySelector<HTMLButtonElement>('#shape');
+
+    const cartDom = document.querySelector<HTMLDivElement>('.pokemonBloc');
+    const cartDomDeux = document.querySelector<HTMLDivElement>('.pokemonBlocDeux');
+    const paginationDom = document.querySelector<HTMLDivElement>('#pagination-bloc');
+
     if (colorElement) {
-      // Une fois que l'élément est présent dans le DOM, appelez getPokemonsByColor
-      displayColorsFilters(colorElement);
-    } else {
-      console.error("L'élément avec l'ID 'color' n'a pas été trouvé.");
+      displayColorsFilter(colorElement);
+    }
+
+    if (shapeElement) {
+      displayShapesFilter(shapeElement);
+    }
+
+    if (cartDom && paginationDom) {
+      try {
+        const pokemons = await getAllPokemons();
+        let currentPage = 1;
+
+        const [prevButton, nextButton] = createPagination(pokemons, currentPage, cartDom);
+        paginationDom.appendChild(prevButton);
+        paginationDom.appendChild(nextButton);
+
+        displayPage(currentPage, cartDom, pokemons);
+      } catch (error) {
+        console.error('Error fetching or displaying Pokemon data:', error);
+      }
+    }
+
+    if (cartDomDeux) {
+      displayShapesFilter(cartDomDeux); // Correction : Utiliser displayShapesFilter pour cartDomDeux
     }
   });
-
-  getAPIContent();
-  getAllPokemons();
 
   return content;
 }

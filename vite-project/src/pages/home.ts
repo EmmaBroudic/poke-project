@@ -1,67 +1,70 @@
 import './home.css';
 import { getAllPokemons } from '../api/getAllPokemons';
 import { displayPage } from '../components/displayPage';
-import { displayColorsFilter } from '../components/displayColorsFilter';
-import {displayShapesFilter}from '../components/displayShapesFilter';
+import { displayFilters } from '../components/displayFilters.ts';
+import { searchPokemon } from '../components/searchPokemon.ts';
 import { createPagination } from '../components/Pagination';
 
 export function home() {
+  // Contenu HTML de la page
   const content = `
     <div id="app">
       <h1>POKEDEX</h1>
+      <div id="search-bar">
+        <input id="search-input" type="text" placeholder="Rechercher un Pokémon">
+      </div>
       <div id="body-bloc">
         <div id="filters">
-          <div id="filters-bloc">
-            <button id="color">Filtrer par couleur</button>
-          </div>
-          <div id="filters-bloc">
-            <button id="shape">Filtrer par forme</button>
-          </div>
+          <button id="filter-shape"></button>
+          <button id="filter-color"></button>
+          <button id="filter-habitat"></button>
         </div>
-        <div id="poke-bloc">
-          <div id="pagination-bloc"></div>
+        <div>
           <div class="pokemonBloc"></div>
-          <div class="pokemonBlocDeux"></div>
+          <div class = "pokemonBlocFilter"></div>
+          <div id="pagination-bloc"></div>
         </div>
       </div>
     </div>
   `;
 
   document.addEventListener('DOMContentLoaded', async () => {
-    const colorElement = document.querySelector<HTMLButtonElement>('#color');
-    const shapeElement = document.querySelector<HTMLButtonElement>('#shape');
-
+    // Sélection des éléments du DOM
+    const filterShape = document.querySelector<HTMLButtonElement>('#filter-shape');
+    const filterColor = document.querySelector<HTMLButtonElement>('#filter-color');
+    const filterHabitat = document.querySelector<HTMLButtonElement>('#filter-habitat');
+    
     const cartDom = document.querySelector<HTMLDivElement>('.pokemonBloc');
-    const cartDomDeux = document.querySelector<HTMLDivElement>('.pokemonBlocDeux');
+    const cartDomFilter = document.querySelector<HTMLDivElement>('.pokemonBlocFilter');
+    
     const paginationDom = document.querySelector<HTMLDivElement>('#pagination-bloc');
+    const searchInput = document.querySelector<HTMLElement>('#search-input');
 
-    if (colorElement) {
-      displayColorsFilter(colorElement);
+    if (filterShape && filterColor && filterHabitat) {
+      displayFilters();
+    } 
+
+    if (searchInput) {
+      searchPokemon(searchInput);
     }
 
-    if (shapeElement) {
-      displayShapesFilter(shapeElement);
-    }
+    // Vérification des éléments du DOM
+    if (cartDom && cartDomFilter && paginationDom) {
 
-    if (cartDom && paginationDom) {
-      try {
-        const pokemons = await getAllPokemons();
-        let currentPage = 1;
+      cartDom.style.display = 'flex';
+      cartDomFilter.style.display = 'none';
 
-        const [prevButton, nextButton] = createPagination(pokemons, currentPage, cartDom);
-        paginationDom.appendChild(prevButton);
-        paginationDom.appendChild(nextButton);
+      // Récupération des Pokémon
+      const pokemons = await getAllPokemons();
+      // Affichage de la première page
+      displayPage(1, cartDom, pokemons);
 
-        displayPage(currentPage, cartDom, pokemons);
-      } catch (error) {
-        console.error('Error fetching or displaying Pokemon data:', error);
-      }
-    }
-
-    if (cartDomDeux) {
-      displayShapesFilter(cartDomDeux); // Correction : Utiliser displayShapesFilter pour cartDomDeux
+      // Création de la pagination
+      const paginationContainer = createPagination(pokemons, 1, cartDom);
+      paginationDom.appendChild(paginationContainer);
     }
   });
 
+  // Retourne le contenu HTML de la page
   return content;
 }

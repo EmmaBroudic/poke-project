@@ -14,7 +14,7 @@ export async function displayFilters() {
             createFilter(filterTwo, filterDomColor, "Couleur");
             createFilter(filterThree, filterDomHabitat, "Habitat");
         } else {
-            console.error("Aucun élément correspondant à '.pokemonBlocFilterShape' trouvé dans le DOM.");
+            console.error("Aucun élément correspondant trouvé dans le DOM.");
         }
     } catch (error) {
         console.log(error);

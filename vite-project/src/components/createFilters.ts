@@ -1,10 +1,11 @@
 import { getFilterElements } from '../api/getFilterElements.ts';
 import { getPokemonsByFilter} from '../api/getPokemonsByFilter.ts';
 import { displayPage } from './displayPage.ts';
-//import { createFilterContent } from './createFilterContent.ts';
+import { createPagination } from '../components/Pagination';
+
 
 export async function createFilter(filter: string, element: HTMLElement, filterTitleInFrench: string) {
-    let selectedFilters: string[] = [];
+    let selectedFilters: string[] = [];  
     
     try {
         const filterElements: string[] = await getFilterElements(filter);
@@ -26,9 +27,12 @@ export async function createFilter(filter: string, element: HTMLElement, filterT
             const label = document.createElement('label');
 
             const checkbox = document.createElement('input');
+            
             checkbox.type = 'checkbox';
             checkbox.name = 'filterElement';
             checkbox.value = filterElement;
+
+            checkbox.setAttribute('data-category', 'filter');
 
             label.appendChild(checkbox);
             checkboxContainer.appendChild(label);
@@ -43,34 +47,60 @@ export async function createFilter(filter: string, element: HTMLElement, filterT
 
             let clickCount: number = 0;
             
+            
             checkbox.addEventListener("click", async (e) => {
+
                 e.stopPropagation();
                 clickCount++;
 
                 const cartDom = document.querySelector<HTMLDivElement>('.pokemonBloc');
                 const cartDomFilter = document.querySelector<HTMLDivElement>('.pokemonBlocFilter');
                 const paginationDom = document.querySelector<HTMLDivElement>('#pagination-bloc');
-// rajouter une condition pour le clic sur un autre filter (vider le tableau et enlever les case cochées)
+                const paginationFilterDom = document.querySelector<HTMLDivElement>('#pagination-bloc-filter');
+
                 if (clickCount % 2 !== 0) {
                     selectedFilters.push(filterElement);
                 } else {
                     selectedFilters = selectedFilters.filter(item => item !== filterElement);
                 }
 
-                console.log(selectedFilters);
+                const checkboxes = document.querySelectorAll<HTMLInputElement>('input[type="checkbox"]:checked');
+                
+                checkboxes.forEach((checkbox) => {
+                    if (checkbox.getAttribute('data-category') !== filter) {
+                        if (checkbox.value === filterElement) {
+                            checkbox.checked = true;
+
+                            selectedFilters = [];
+                            selectedFilters.push(filterElement);
+                        } else {
+                            checkbox.checked = false;
+
+                            selectedFilters = [];
+                            selectedFilters.push(filterElement);
+                        }
+                    }
+                });
+
                 const pokemonList = await getPokemonsByFilter(filter, selectedFilters);
 
-                if (selectedFilters.length > 0 && cartDom && cartDomFilter && paginationDom) {
+                if (selectedFilters.length > 0 && cartDom && cartDomFilter && paginationDom && paginationFilterDom) {
                     cartDom.style.display = 'none';
                     cartDomFilter.style.display = 'flex';
+                    paginationDom.style.display ='none';
+                    paginationFilterDom.style.display ='flex';
     
                     displayPage(1, cartDomFilter, pokemonList);
 
-                } else if (selectedFilters.length === 0 && cartDom && cartDomFilter && paginationDom){
+                    const paginationContainer = createPagination(pokemonList, 1, cartDomFilter);
+                    paginationFilterDom.innerHTML = '';
+                    paginationFilterDom.appendChild(paginationContainer);
+
+                } else if (selectedFilters.length === 0 && cartDom && cartDomFilter && paginationDom && paginationFilterDom){
                     cartDom.style.display = 'flex';
                     cartDomFilter.style.display = 'none';
-    
-                    displayPage(1, cartDomFilter, pokemonList);
+                    paginationDom.style.display ='flex';
+                    paginationFilterDom.style.display ='none';
                 }
             });
         });

@@ -23,6 +23,7 @@ export function home() {
           <div class="pokemonBloc"></div>
           <div class = "pokemonBlocFilter"></div>
           <div id="pagination-bloc"></div>
+          <div id="pagination-bloc-filter"></div>
         </div>
       </div>
     </div>
@@ -38,9 +39,10 @@ export function home() {
     const cartDomFilter = document.querySelector<HTMLDivElement>('.pokemonBlocFilter');
     
     const paginationDom = document.querySelector<HTMLDivElement>('#pagination-bloc');
+    const paginationFilterDom = document.querySelector<HTMLDivElement>('#pagination-bloc-filter');
     const searchInput = document.querySelector<HTMLElement>('#search-input');
 
-    if (filterShape && filterColor && filterHabitat) {
+    if (filterShape && filterColor && filterHabitat && paginationFilterDom) {
       displayFilters();
     } 
 

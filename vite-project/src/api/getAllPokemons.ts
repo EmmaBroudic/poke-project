@@ -2,7 +2,7 @@
 import { fetchData } from './utils.ts';
 
 export async function getAllPokemons() {
-  let nextUrl: string = 'https://pokeapi.co/api/v2/pokemon';
+  let nextUrl: string = 'https://pokeapi.co/api/v2/pokemon/?limit=20000';
   const pokemons: any[] = [];
 
   while (nextUrl) {
@@ -11,6 +11,5 @@ export async function getAllPokemons() {
     nextUrl = pokemonsResponse.next;
   }
 
-  console.log(pokemons);
   return pokemons;
 }

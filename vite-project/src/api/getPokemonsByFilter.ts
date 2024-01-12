@@ -18,24 +18,3 @@ export async function getPokemonsByFilter(filter: string, filterElements: string
 
     return pokemonList;
 }
-/*
-import { fetchData } from './utils.ts';
-import { getPokemonById, Pokemon } from './getPokemonById.ts';
-
-export async function getPokemonsByFilter(filter: string, filterElements: string[]): Promise<Pokemon[]> {
-    let pokemonList: Pokemon[] = [];
-
-    const promises = filterElements.map(async (filterElement: string) => {
-        let url = `https://pokeapi.co/api/v2/pokemon-${filter}/${filterElement}`;
-        const data = await fetchData(url);
-
-        const pokemonIds = data.pokemon_species.map(pokemon => pokemon.url.split('/').slice(-2, -1)[0]);
-        const pokemonDataPromises = pokemonIds.map(id => getPokemonById(id));
-
-        pokemonList = await Promise.all(pokemonDataPromises);
-    });
-
-    await Promise.all(promises);
-    
-    return pokemonList.flat();
-}*/
